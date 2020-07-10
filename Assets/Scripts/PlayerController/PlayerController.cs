@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private float sprintSpeed;
 
     private SpriteRenderer sr;
-    private Animator myAnimator;
+    // private Animator myAnimator;
 
     public bool isGrounded;
     public Transform feetPosition;
@@ -26,19 +26,13 @@ public class PlayerController : MonoBehaviour
 
     private bool facingRight;
 
-    // health
-    public int health = 100;
-    public Transform fullFillAmount;
-    public float amount;
-
     private void Awake()
     {
         facingRight = true;
         sr = GetComponent<SpriteRenderer>();
         sr.flipX = false;
         rb = GetComponent<Rigidbody2D>();
-        myAnimator = GetComponent<Animator>();
-        amount = fullFillAmount.localScale.x;
+        // myAnimator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -71,7 +65,7 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
             jumpTimeCounter = jumpTime;
             rb.velocity = Vector2.up * jumpForce;
-            myAnimator.ResetTrigger("jump");
+            // myAnimator.ResetTrigger("jump");
         }
 
         if (Input.GetKey(KeyCode.Space) && isJumping == true)
@@ -93,21 +87,14 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && isJumping)
         {
             isGrounded = false;
-            myAnimator.SetTrigger("jump");
-        }
-
-
-        // death 
-        if (this.health == 0)
-        {
-            //do something
+            // myAnimator.SetTrigger("jump");
         }
     }
 
     private void HandleMovement(float horizontal, float speed)
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-        myAnimator.SetFloat("speed", Mathf.Abs(horizontal * speed));
+        // myAnimator.SetFloat("speed", Mathf.Abs(horizontal * speed));
     }
 
     private void Sprint(float horizontal)
@@ -133,15 +120,15 @@ public class PlayerController : MonoBehaviour
     {
         if (rb.velocity.y <= 0)
         {
-            myAnimator.SetBool("land", true);
+            // myAnimator.SetBool("land", true);
             Collider2D[] colliders = Physics2D.OverlapCircleAll(feetPosition.position, checkRadius);
 
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].gameObject != gameObject)
                 {
-                    myAnimator.ResetTrigger("jump");
-                    myAnimator.SetBool("land", false);
+                    /*myAnimator.ResetTrigger("jump");
+                    myAnimator.SetBool("land", false);*/
                     return true;
                 }
             }
@@ -153,11 +140,11 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrounded)
         {
-            myAnimator.SetLayerWeight(1, 1);
+            // myAnimator.SetLayerWeight(1, 1);
         }
         else
         {
-            myAnimator.SetLayerWeight(1, 0);
+            // myAnimator.SetLayerWeight(1, 0);
         }
     }
 }
