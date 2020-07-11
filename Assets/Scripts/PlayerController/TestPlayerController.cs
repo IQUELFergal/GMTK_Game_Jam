@@ -7,7 +7,7 @@ public class TestPlayerController : MonoBehaviour
 {
     public ControlRandomizer controlRandomizer;
     public float movementStep = 1;
-    public float speed = 6;
+    public float speed = 10;
     public float actionTime = 1;
     Rigidbody2D rb;
 
@@ -15,7 +15,6 @@ public class TestPlayerController : MonoBehaviour
     public Transform feetPosition;
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
-    private bool isJumping;
 
 
     // Start is called before the first frame update
@@ -37,41 +36,11 @@ public class TestPlayerController : MonoBehaviour
     {
         // moving 
         isGrounded = Physics2D.OverlapCircle(feetPosition.position, checkRadius, groundLayerMask);
-
-        /*if (isGrounded == true && Input.GetKeyDown(KeyCode.Space))
-        {
-            isJumping = true;
-            jumpTimeCounter = jumpTime;
-            rb.velocity = Vector2.up * jumpForce;
-            // myAnimator.ResetTrigger("jump");
-        }
-
-        if (Input.GetKey(KeyCode.Space) && isJumping == true)
-        {
-            if (jumpTimeCounter > 0)
-            {
-                rb.velocity = Vector2.up * jumpForce;
-                jumpTimeCounter -= Time.deltaTime;
-            }
-            else isJumping = false;
-        }
-        else isJumping = false;
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isJumping = false;
-        }
-
-        if (isGrounded && isJumping)
-        {
-            isGrounded = false;
-            // myAnimator.SetTrigger("jump");
-        }*/
     }
 
     void DoSomething(string action)
     {
-        //Debug.Log(action);
+        // Debug.Log(action);
         switch (action)
         {
             case "none":
@@ -83,7 +52,7 @@ public class TestPlayerController : MonoBehaviour
                 break;
 
 
-            //Move Left
+            // Move Left
             case "moveLeft":
                 StartCoroutine(Move(-movementStep));
                 break;
@@ -94,7 +63,7 @@ public class TestPlayerController : MonoBehaviour
 
 
 
-            //Move Right
+            // Move Right
             case "moveRight":
                 StartCoroutine(Move(-movementStep*Time.deltaTime));
                 break;
@@ -105,9 +74,16 @@ public class TestPlayerController : MonoBehaviour
 
 
 
-
+            // Jumping
             case "jump":
-                StartCoroutine(Jump(movementStep));
+                if (isGrounded)
+                {
+                    rb.AddForce(Vector2.up * 250);
+                }                    
+                break;
+
+            case "jump" + Controller.continuousAction:
+                // rb.AddForce(Vector2.up * speed); 
                 break;
 
             case "crouch":
@@ -141,22 +117,12 @@ public class TestPlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator Jump(float speed)
-    {
-        if (speed != 0)
-        {
-            Debug.Log("Jumping");
-            rb.AddForce(Vector2.up * speed);
-            yield return new WaitForSeconds(actionTime);
-        }
-    }
-
     private void MoveContinuous(float speed)
     {
         if (speed != 0)
         {
             Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
-            //rb.velocity = new Vector2(speed, rb.velocity.y);
+            // rb.velocity = new Vector2(speed, rb.velocity.y);
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
     }

@@ -444,7 +444,6 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  jumpTime: 0.3
 --- !u!212 &331459795
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -530,7 +529,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &331459798
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1801,10 +1800,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52f87521373a7804c8b8b59f6c76dafa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  green: {r: 0, g: 1, b: 0, a: 1}
-  red: {r: 1, g: 0, b: 0, a: 1}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
-  image: {fileID: 1337107476}
   controllers:
   - {fileID: 1521555683}
   - {fileID: 854110107}
