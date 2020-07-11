@@ -72,8 +72,6 @@ public class TestPlayerController : MonoBehaviour
                 MoveContinuous(movementStep);
                 break;
 
-
-
             // Jumping
             case "jump":
                 if (isGrounded)
