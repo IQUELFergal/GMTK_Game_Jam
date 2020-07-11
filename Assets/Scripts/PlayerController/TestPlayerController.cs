@@ -9,8 +9,12 @@ public class TestPlayerController : MonoBehaviour
     public float movementStep = 1;
     public float speed = 10;
     public float actionTime = 1;
+
     bool isMoving = false;
     bool isInteracting = false;
+    bool isCrouched = false;
+    bool canCrouch = true;
+
     Rigidbody2D rb;
     ColliderInteractor interactor;
 
@@ -19,7 +23,7 @@ public class TestPlayerController : MonoBehaviour
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
 
-    bool isCrouched = false;
+    
 
     float crouchScale = 0.5f;
     
@@ -191,21 +195,27 @@ public class TestPlayerController : MonoBehaviour
     // Crouching 
     private void Crouch()
     {
-        if (!isCrouched)
+        if (canCrouch)
         {
-            Debug.Log("Crouching");
-            transform.localScale = new Vector2(1, crouchScale);
+            if (!isCrouched)
+            {
+                Debug.Log("Crouching");
+                transform.localScale = new Vector2(1, crouchScale);
+                isCrouched = true;
+            }
+            else
+            {
+                Debug.Log("Uncrouching");
+                transform.localScale = new Vector2(1, 1);
+                isCrouched = false;
+            }
         }
-        else
-        {
-            Debug.Log("Uncrouching");
-            transform.localScale = new Vector2(1, 1);
-        }
+        
     }
 
     private void CrouchContinuous()
     {
-        if (!isInteracting)
+        if (canCrouch)
         {
             Crouch();
             StartCoroutine(CancelCrouch(5.0f));
@@ -214,8 +224,8 @@ public class TestPlayerController : MonoBehaviour
 
     IEnumerator CancelCrouch(float duration)
     {
-        isCrouched = true;
+        canCrouch = false;
         yield return new WaitForSeconds(duration);
-        isCrouched = true;
+        canCrouch = true;
     }
 }
