@@ -59,13 +59,14 @@ public class ControlRandomizer : MonoBehaviour
 
         int enumLength = Enum.GetNames(typeof(Controller.Control)).Length;
         
-        //Creer list de controllers a partir de l'array
+        //Create a temporary list containing every controller inside the controller array
         List<Controller> controllerList = new List<Controller>();
         for (int i = 0; i < controllers.Length; i++)
         {
             controllerList.Add(controllers[i]);
         }
 
+        //Sets up a random controller for each control inside the enum
         for (int i = 1; i < enumLength; i++)
         {
             int n = UnityEngine.Random.Range(0, controllerList.Count);
@@ -73,6 +74,7 @@ public class ControlRandomizer : MonoBehaviour
             controllerList.RemoveAt(n);
         }
 
+        //Sets up the rest of the controllers without control so the dont do anything
         for (int i = 0; i < controllerList.Count; i++)
         {
             controllerList[i].Setup(0);
