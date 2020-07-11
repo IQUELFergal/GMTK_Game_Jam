@@ -94,7 +94,7 @@ public class TestPlayerController : MonoBehaviour
 
             // Interact
             case "interact":
-                InteractContinuous();
+                InteractContinuous(); 
                 break;
 
             case "interact" + Controller.continuousAction:

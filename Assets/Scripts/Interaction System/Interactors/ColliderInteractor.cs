@@ -4,21 +4,6 @@ public class ColliderInteractor : MonoBehaviour
 {
     public IInteractable currentInteractable = null;
 
-    /*void Update()
-    {
-        CheckForInteraction();
-    }
-
-    private void CheckForInteraction()
-    {
-        if (currentInteractable == null) return;
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            currentInteractable.Interact();
-        }
-    }*/
-
     public void Interact()
     {
         if (currentInteractable == null) return;
