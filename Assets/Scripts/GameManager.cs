@@ -13,6 +13,11 @@ public class GameManager : MonoBehaviour
 
     public EndGameInteractable endgameInteractable;
 
+    public GameObject player;
+    public GameObject start;
+
+    bool canReset = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,5 +75,30 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    // reset position
+    public void ResetPlayerPosition()
+    {
+        if (canReset)
+        {
+            player.SetActive(false);
+            player.transform.position = start.transform.position;
+            player.SetActive(true);
+        }            
+    }
 
+    public void ContinuousResetPlayerPosition()
+    {
+        if (canReset)
+        {
+            ResetPlayerPosition();
+            StartCoroutine(CancelResetPlayerPositio(3.0f));
+        }
+    }
+
+    IEnumerator CancelResetPlayerPositio(float duration)
+    {
+        canReset = false;
+        yield return new WaitForSeconds(duration);
+        canReset = true;
+    }
 }

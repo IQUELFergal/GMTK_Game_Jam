@@ -103,7 +103,6 @@ public class PlayerController : MonoBehaviour
         {
             HandleMovement(horizontal, sprintSpeed);
         }
-
     }
 
     private void Flip(float horizontal)

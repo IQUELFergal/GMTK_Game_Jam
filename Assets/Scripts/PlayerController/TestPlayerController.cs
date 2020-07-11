@@ -110,7 +110,10 @@ public class TestPlayerController : MonoBehaviour
 
             // die
             case "selfDestroy":
-                destroy.Destroy();
+                FindObjectOfType<GameManager>().ResetPlayerPosition();
+                break;
+            case "selfDestroy" + Controller.continuousAction:
+                FindObjectOfType<GameManager>().ContinuousResetPlayerPosition();
                 break;
 
             // default case
