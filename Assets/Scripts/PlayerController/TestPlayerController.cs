@@ -21,7 +21,7 @@ public class TestPlayerController : MonoBehaviour
 
     bool isCrouched = false;
 
-    float myScale = 0.5f;
+    float crouchScale = 0.5f;
     
 
 
@@ -167,20 +167,7 @@ public class TestPlayerController : MonoBehaviour
         return false;
     }
 
-    // Crouching 
-    private void Crouch()
-    {
-        if (!isCrouched)
-        {
-            transform.localScale = new Vector2(1, myScale);
-            isCrouched = !isCrouched;
-        }
-        else
-        {
-            transform.localScale = new Vector2(1, 1);
-            isCrouched = !isCrouched;
-        }
-    }
+
 
 
     private void InteractContinuous()
@@ -196,28 +183,39 @@ public class TestPlayerController : MonoBehaviour
     IEnumerator CancelInteraction(float duration)
     {
         isInteracting = true;
-        float timer = 0f;
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-
-            yield return null;
-        }
+        yield return new WaitForSeconds(duration);
         isInteracting = false;
+    }
+
+
+    // Crouching 
+    private void Crouch()
+    {
+        if (!isCrouched)
+        {
+            Debug.Log("Crouching");
+            transform.localScale = new Vector2(1, crouchScale);
+        }
+        else
+        {
+            Debug.Log("Uncrouching");
+            transform.localScale = new Vector2(1, 1);
+        }
     }
 
     private void CrouchContinuous()
     {
         if (!isInteracting)
         {
+            Crouch();
             StartCoroutine(CancelCrouch(5.0f));
         }
     }
 
     IEnumerator CancelCrouch(float duration)
     {
-        Crouch();
+        isCrouched = true;
         yield return new WaitForSeconds(duration);
-        Crouch();
+        isCrouched = true;
     }
 }
