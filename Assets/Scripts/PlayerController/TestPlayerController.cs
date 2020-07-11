@@ -21,7 +21,7 @@ public class TestPlayerController : MonoBehaviour
 
     bool isCrouched = false;
 
-    float myScale = 0.5f;
+    float crouchScale = 0.5f;
     
 
 
@@ -172,7 +172,7 @@ public class TestPlayerController : MonoBehaviour
     {
         if (!isCrouched)
         {
-            transform.localScale = new Vector2(1, myScale);
+            transform.localScale = new Vector2(1, crouchScale);
             isCrouched = !isCrouched;
         }
         else
@@ -180,6 +180,21 @@ public class TestPlayerController : MonoBehaviour
             transform.localScale = new Vector2(1, 1);
             isCrouched = !isCrouched;
         }
+    }
+
+    private void CrouchContinuous()
+    {
+        if (!isInteracting)
+        {
+            StartCoroutine(CancelCrouch(5.0f));
+        }
+    }
+
+    IEnumerator CancelCrouch(float duration)
+    {
+        Crouch();
+        yield return new WaitForSeconds(duration);
+        Crouch();
     }
 
 
@@ -204,20 +219,5 @@ public class TestPlayerController : MonoBehaviour
             yield return null;
         }
         isInteracting = false;
-    }
-
-    private void CrouchContinuous()
-    {
-        if (!isInteracting)
-        {
-            StartCoroutine(CancelCrouch(5.0f));
-        }
-    }
-
-    IEnumerator CancelCrouch(float duration)
-    {
-        Crouch();
-        yield return new WaitForSeconds(duration);
-        Crouch();
     }
 }
