@@ -18,6 +18,10 @@ public class TestPlayerController : MonoBehaviour
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
 
+    bool isCrouched = false;
+
+    float myScale = 0.5f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +58,6 @@ public class TestPlayerController : MonoBehaviour
                 ResetMoveSpeed();
                 break;
 
-
             // Move Left
             case "moveLeft":
                 StartCoroutine(Move(-movementStep));
@@ -63,8 +66,6 @@ public class TestPlayerController : MonoBehaviour
             case "moveLeft" + Controller.continuousAction:
                 MoveContinuous(-movementStep);
                 break;
-
-
 
             // Move Right
             case "moveRight":
@@ -75,7 +76,7 @@ public class TestPlayerController : MonoBehaviour
                 MoveContinuous(movementStep);
                 break;
 
-            // Jumping
+                            // Jump
             case "jump":
                 if (isGrounded)
                 {
@@ -87,15 +88,28 @@ public class TestPlayerController : MonoBehaviour
                 // rb.AddForce(Vector2.up * speed); 
                 break;
 
+            // crouch
             case "crouch":
+                if (!isCrouched)
+                {
+                    transform.localScale = new Vector2(1, myScale);
+                    isCrouched = !isCrouched;
+                } else
+                {
+                    transform.localScale = new Vector2(1, 1);
+                    isCrouched = !isCrouched;
+                }                
                 break;
-
+                            
+            // interact
             case "interact":
                 break;
 
+            // die
             case "selfDestroy":
                 break;
 
+            // default case
             default:
                 Debug.LogError("This action does not exist !");
                 break;
