@@ -23,11 +23,10 @@ public class TestPlayerController : MonoBehaviour
     public Transform feetPosition;
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
-
-
-
+        
     float crouchScale = 0.5f;
 
+    SeflDestroy destroy;
 
 
     // Start is called before the first frame update
@@ -111,6 +110,7 @@ public class TestPlayerController : MonoBehaviour
 
             // die
             case "selfDestroy":
+                destroy.Destroy();
                 break;
 
             // default case
