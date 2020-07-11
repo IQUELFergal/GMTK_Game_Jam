@@ -9,12 +9,8 @@ public class TestPlayerController : MonoBehaviour
     public float movementStep = 1;
     public float speed = 10;
     public float actionTime = 1;
-
     bool isMoving = false;
     bool isInteracting = false;
-    bool isCrouched = false;
-    bool canCrouch = true;
-
     Rigidbody2D rb;
     ColliderInteractor interactor;
 
@@ -23,7 +19,7 @@ public class TestPlayerController : MonoBehaviour
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
 
-    
+    bool isCrouched = false;
 
     float crouchScale = 0.5f;
     
@@ -171,7 +167,35 @@ public class TestPlayerController : MonoBehaviour
         return false;
     }
 
+    // Crouching 
+    private void Crouch()
+    {
+        if (!isCrouched)
+        {
+            transform.localScale = new Vector2(1, crouchScale);
+            isCrouched = !isCrouched;
+        }
+        else
+        {
+            transform.localScale = new Vector2(1, 1);
+            isCrouched = !isCrouched;
+        }
+    }
 
+    private void CrouchContinuous()
+    {
+        if (!isInteracting)
+        {
+            StartCoroutine(CancelCrouch(5.0f));
+        }
+    }
+
+    IEnumerator CancelCrouch(float duration)
+    {
+        Crouch();
+        yield return new WaitForSeconds(duration);
+        Crouch();
+    }
 
 
     private void InteractContinuous()
@@ -187,44 +211,13 @@ public class TestPlayerController : MonoBehaviour
     IEnumerator CancelInteraction(float duration)
     {
         isInteracting = true;
-        yield return new WaitForSeconds(duration);
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            yield return null;
+        }
         isInteracting = false;
-    }
-
-
-    // Crouching 
-    private void Crouch()
-    {
-        if (canCrouch)
-        {
-            if (!isCrouched)
-            {
-                Debug.Log("Crouching");
-                transform.localScale = new Vector2(1, crouchScale);
-                isCrouched = true;
-            }
-            else
-            {
-                Debug.Log("Uncrouching");
-                transform.localScale = new Vector2(1, 1);
-                isCrouched = false;
-            }
-        }
-    }
-
-    private void CrouchContinuous()
-    {
-        if (canCrouch)
-        {
-            Crouch();
-            StartCoroutine(CancelCrouch(5.0f));
-        }
-    }
-
-    IEnumerator CancelCrouch(float duration)
-    {
-        canCrouch = false;
-        yield return new WaitForSeconds(duration);
-        canCrouch = true;
     }
 }
