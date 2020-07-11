@@ -10,6 +10,7 @@ public class TestPlayerController : MonoBehaviour
     public float speed = 10;
     public float actionTime = 1;
     bool isMoving = false;
+    bool isInteracting = false;
     Rigidbody2D rb;
     ColliderInteractor interactor;
 
@@ -21,6 +22,7 @@ public class TestPlayerController : MonoBehaviour
     bool isCrouched = false;
 
     float myScale = 0.5f;
+    
 
 
     // Start is called before the first frame update
@@ -170,13 +172,27 @@ public class TestPlayerController : MonoBehaviour
         return false;
     }
 
-    private void InteractContinuous(float speed)
+
+    private void InteractContinuous()
     {
-        if (speed != 0)
+        if (!isInteracting)
         {
-            Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
-            // rb.velocity = new Vector2(speed, rb.velocity.y);
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
+            Debug.Log("Interacting");
+            interactor.Interact();
+            StartCoroutine(CancelInteraction(1));
         }
+    }
+
+    IEnumerator CancelInteraction(float duration)
+    {
+        isInteracting = true;
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            yield return null;
+        }
+        isInteracting = false;
     }
 }
