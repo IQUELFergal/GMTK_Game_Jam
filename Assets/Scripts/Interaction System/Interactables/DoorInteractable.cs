@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable
+public class DoorInteractable : MonoBehaviour, IInteractable
 {
     public SpriteRenderer interruptorSr;
     SpriteRenderer sr;
