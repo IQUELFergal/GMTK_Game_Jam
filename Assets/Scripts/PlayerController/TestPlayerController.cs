@@ -14,6 +14,7 @@ public class TestPlayerController : MonoBehaviour
     bool isInteracting = false;
     bool isCrouched = false;
     bool canCrouch = true;
+    bool canJump = true;
 
     Rigidbody2D rb;
     ColliderInteractor interactor;
@@ -84,14 +85,11 @@ public class TestPlayerController : MonoBehaviour
 
             // Jump
             case "jump":
-                if (isGrounded)
-                {
-                    rb.AddForce(Vector2.up * 250);
-                }
+                Jump();
                 break;
 
             case "jump" + Controller.continuousAction:
-                // rb.AddForce(Vector2.up * speed); 
+                JumpContinuous();
                 break;
 
             // crouch
@@ -171,28 +169,34 @@ public class TestPlayerController : MonoBehaviour
         return false;
     }
 
-
-
-
-    private void InteractContinuous()
+    private void Jump()
     {
-        if (!isInteracting)
+        if (canJump)
         {
-            Debug.Log("Interacting");
-            interactor.Interact();
-            StartCoroutine(CancelInteraction(1));
+            if (isGrounded)
+            {
+                rb.AddForce(Vector2.up * 250);
+            }
+        }            
+    }
+
+    private void JumpContinuous()
+    {
+        if (canJump)
+        {
+            Jump();
+            StartCoroutine(CancelJump(3.0f));
         }
     }
 
-    IEnumerator CancelInteraction(float duration)
+    IEnumerator CancelJump(float duration)
     {
-        isInteracting = true;
+        canJump = false;
         yield return new WaitForSeconds(duration);
-        isInteracting = false;
-    }
+        canJump = true;
+    }    
 
-
-    // Crouching 
+    // Crouch
     private void Crouch()
     {
         if (canCrouch)
@@ -217,7 +221,7 @@ public class TestPlayerController : MonoBehaviour
         if (canCrouch)
         {
             Crouch();
-            StartCoroutine(CancelCrouch(5.0f));
+            StartCoroutine(CancelCrouch(1.0f));
         }
     }
 
@@ -226,5 +230,23 @@ public class TestPlayerController : MonoBehaviour
         canCrouch = false;
         yield return new WaitForSeconds(duration);
         canCrouch = true;
+    }
+
+    // Interact
+    private void InteractContinuous()
+    {
+        if (!isInteracting)
+        {
+            Debug.Log("Interacting");
+            interactor.Interact();
+            StartCoroutine(CancelInteraction(1));
+        }
+    }
+
+    IEnumerator CancelInteraction(float duration)
+    {
+        isInteracting = true;
+        yield return new WaitForSeconds(duration);
+        isInteracting = false;
     }
 }
