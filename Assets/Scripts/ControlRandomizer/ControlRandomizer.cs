@@ -6,18 +6,11 @@ using UnityEngine.UI;
 
 public class ControlRandomizer : MonoBehaviour
 {
-    public Color green = Color.green;
-    public Color red = Color.red;
-    public Color baseColor = Color.white;
-    bool isRed = true;
-
-    public Image image;
     public Controller[] controllers;
     
 
     void Start()
     {
-        image.color = baseColor;
 
         int enumLength = Enum.GetNames(typeof(Controller.Control)).Length;
         if (enumLength > controllers.Length)

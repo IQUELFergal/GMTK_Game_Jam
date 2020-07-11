@@ -50,7 +50,7 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerClick(PointerEventData eventData)
     {
         //Debug.Log(eventData.button.ToString() + " click on " + this.ToString());
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
             stringEvent.Invoke(control.ToString());
             StartCoroutine(FlashColor());
@@ -59,7 +59,7 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
                 isLocked = false;
             }
         }
-        else if (eventData.button == PointerEventData.InputButton.Left)
+        else if (eventData.button == PointerEventData.InputButton.Right)
         {
             isLocked = !isLocked;
             if (isLocked) image.color = activatedColor;
