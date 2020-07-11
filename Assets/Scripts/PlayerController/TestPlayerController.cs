@@ -10,7 +10,6 @@ public class TestPlayerController : MonoBehaviour
     public float speed = 10;
     public float actionTime = 1;
     bool isMoving = false;
-    bool isInteracting = false;
     Rigidbody2D rb;
     ColliderInteractor interactor;
 
@@ -18,6 +17,10 @@ public class TestPlayerController : MonoBehaviour
     public Transform feetPosition;
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
+
+    bool isCrouched = false;
+
+    float myScale = 0.5f;
 
 
     // Start is called before the first frame update
@@ -55,7 +58,6 @@ public class TestPlayerController : MonoBehaviour
                 ResetMoveSpeed();
                 break;
 
-
             // Move Left
             case "moveLeft":
                 StartCoroutine(Move(-movementStep));
@@ -64,8 +66,6 @@ public class TestPlayerController : MonoBehaviour
             case "moveLeft" + Controller.continuousAction:
                 MoveContinuous(-movementStep);
                 break;
-
-
 
             // Move Right
             case "moveRight":
@@ -88,11 +88,20 @@ public class TestPlayerController : MonoBehaviour
                 // rb.AddForce(Vector2.up * speed); 
                 break;
 
+            // crouch
             case "crouch":
+                if (!isCrouched)
+                {
+                    transform.localScale = new Vector2(1, myScale);
+                    isCrouched = !isCrouched;
+                } else
+                {
+                    transform.localScale = new Vector2(1, 1);
+                    isCrouched = !isCrouched;
+                }                
                 break;
-
-
-            // Interact
+                            
+            // interact
             case "interact":
                 InteractContinuous(); 
                 break;
@@ -101,12 +110,11 @@ public class TestPlayerController : MonoBehaviour
                 InteractContinuous();
                 break;
 
-
-
-
+            // die
             case "selfDestroy":
                 break;
 
+            // default case
             default:
                 Debug.LogError("This action does not exist !");
                 break;
@@ -162,27 +170,13 @@ public class TestPlayerController : MonoBehaviour
         return false;
     }
 
-
-    private void InteractContinuous()
+    private void InteractContinuous(float speed)
     {
-        if (!isInteracting)
+        if (speed != 0)
         {
-            Debug.Log("Interacting");
-            interactor.Interact();
-            StartCoroutine(CancelInteraction(1));
+            Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
+            // rb.velocity = new Vector2(speed, rb.velocity.y);
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
-    }
-
-    IEnumerator CancelInteraction(float duration)
-    {
-        isInteracting = true;
-        float timer = 0f;
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-
-            yield return null;
-        }
-        isInteracting = false;
     }
 }
