@@ -2,7 +2,7 @@
 
 public class ColliderInteractor : MonoBehaviour
 {
-    private IInteractable currentInteractable = null;
+    public IInteractable currentInteractable = null;
 
     /*void Update()
     {
@@ -18,6 +18,12 @@ public class ColliderInteractor : MonoBehaviour
             currentInteractable.Interact();
         }
     }*/
+
+    public void Interact()
+    {
+        if (currentInteractable == null) return;
+        currentInteractable.Interact();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
