@@ -210,7 +210,6 @@ public class TestPlayerController : MonoBehaviour
                 isCrouched = false;
             }
         }
-        
     }
 
     private void CrouchContinuous()
