@@ -16,8 +16,11 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
     public Control control = Control.none;
 
 
-    public Text text;
+    Text text;
     Image image;
+    public float flashDuration = 0.5f;
+    public Color baseColor = Color.white;
+    public Color activatedColor = Color.yellow;
 
 
     [HideInInspector] public StringEvent stringEvent;
@@ -25,12 +28,11 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
     [HideInInspector] public const string continuousAction = "Continuous";
 
 
-
-
     protected override void Awake()
     {
         base.Awake();
         image = GetComponent<Image>();
+        text = transform.GetChild(0).GetComponent<Text>();
         if (stringEvent == null)
             stringEvent = new StringEvent();
 
@@ -51,6 +53,7 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             stringEvent.Invoke(control.ToString());
+            StartCoroutine(FlashColor());
             if (isLocked)
             {
                 isLocked = false;
@@ -59,14 +62,15 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
             isLocked = !isLocked;
+            if (isLocked) image.color = activatedColor;
+            else image.color = baseColor;
         }
     }
 
-    public IEnumerator FlashColor(Color color)
+    public IEnumerator FlashColor()
     {
-        Color baseColor = image.color;
-        image.color = color;
-        yield return new WaitForSeconds(.5f);
+        image.color = activatedColor;
+        yield return new WaitForSeconds(flashDuration);
         image.color = baseColor;
     }
 

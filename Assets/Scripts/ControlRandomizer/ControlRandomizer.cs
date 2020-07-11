@@ -29,30 +29,6 @@ public class ControlRandomizer : MonoBehaviour
         RandomizeControllers();
     }
 
-
-    //Debug
-    public void ChangeColor()
-    {
-        if (isRed)
-        {
-            StartCoroutine(FlashColor(green));
-        }
-        else StartCoroutine(FlashColor(red));
-        isRed = !isRed;
-    }
-
-    public IEnumerator FlashColor(Color color)
-    {
-        image.color = color;
-        yield return new WaitForSeconds(.5f);
-        image.color = baseColor;
-    }
-
-    //End of Debug
-
-
-
-
     public void RandomizeControllers()
     {
         Debug.Log("Randomizing controls");

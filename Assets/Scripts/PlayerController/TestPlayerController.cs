@@ -30,22 +30,34 @@ public class TestPlayerController : MonoBehaviour
             case "none":
                 ResetMoveSpeed();
                 break;
+
+            case "none" + Controller.continuousAction:
+                ResetMoveSpeed();
+                break;
+
+
+            //Move Left
             case "moveLeft":
                 StartCoroutine(Move(-movementStep));
                 break;
 
+            case "moveLeft" + Controller.continuousAction:
+                MoveContinuous(-movementStep);
+                break;
+
+
+
+            //Move Right
             case "moveRight":
                 StartCoroutine(Move(-movementStep*Time.deltaTime));
                 break;
 
-            case "moveLeft"+Controller.continuousAction:
-                MoveContinuous(-movementStep);
-                break;
-
             case "moveRight" + Controller.continuousAction:
-                //StartCoroutine(Move(movementStep * Time.deltaTime));
                 MoveContinuous(movementStep);
                 break;
+
+
+
 
             case "jump":
                 break;
