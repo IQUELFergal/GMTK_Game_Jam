@@ -38,25 +38,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void FreezeGame()
+    {
+        Time.timeScale = 0f;
+        isPaused = true;
+    }
+
+    public void UnfreezeGame()
+    {
+        Time.timeScale = 1f;
+        isPaused = false;
+    }
+
     public void PauseGame()
     {
         pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
-        isPaused = true;
+        FreezeGame();
     }
 
     public void EndGame()
     {
         endgameMenu.SetActive(true);
-        Time.timeScale = 0f;
-        isPaused = true;
+        FreezeGame();
     }
 
     public void ResumeGame()
     {
         pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
-        isPaused = false;
+        UnfreezeGame();
     }
 
     public void GoToMainMenu(SceneAsset scene)
