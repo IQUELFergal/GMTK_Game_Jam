@@ -4,7 +4,7 @@ public class ColliderInteractor : MonoBehaviour
 {
     private IInteractable currentInteractable = null;
 
-    void Update()
+    /*void Update()
     {
         CheckForInteraction();
     }
@@ -16,12 +16,8 @@ public class ColliderInteractor : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             currentInteractable.Interact();
-            if (interactionUI != null)
-            {
-                interactionUI.gameObject.SetActive(false);
-            }
         }
-    }
+    }*/
 
     private void OnTriggerEnter2D(Collider2D other)
     {

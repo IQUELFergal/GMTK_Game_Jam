@@ -11,6 +11,7 @@ public class TestPlayerController : MonoBehaviour
     public float actionTime = 1;
     bool isMoving = false;
     Rigidbody2D rb;
+    ColliderInteractor interactor;
 
     public bool isGrounded;
     public Transform feetPosition;
@@ -22,6 +23,7 @@ public class TestPlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        interactor = GetComponent<ColliderInteractor>();
         for (int i = 0; i < controlRandomizer.controllers.Length; i++)
         {
             controlRandomizer.controllers[i].stringEvent.AddListener(DoSomething);
@@ -147,5 +149,15 @@ public class TestPlayerController : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private void InteractContinuous(float speed)
+    {
+        if (speed != 0)
+        {
+            Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
+            // rb.velocity = new Vector2(speed, rb.velocity.y);
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
     }
 }
