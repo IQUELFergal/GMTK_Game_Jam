@@ -9,6 +9,7 @@ public class TestPlayerController : MonoBehaviour
     public float movementStep = 1;
     public float speed = 10;
     public float actionTime = 1;
+    bool isMoving = false;
     Rigidbody2D rb;
 
     public bool isGrounded;
@@ -106,12 +107,14 @@ public class TestPlayerController : MonoBehaviour
 
     IEnumerator Move(float speed)
     {
-        if(speed != 0)
+        if(speed != 0 && !isMoving)
         {
+            isMoving = true;
             Debug.Log("Moving " + (speed > 0 ? "right" : "left"));
             rb.velocity = new Vector2(speed, rb.velocity.y);
             yield return new WaitForSeconds(actionTime);
             ResetMoveSpeed();
+            isMoving = false;
         }
     }
 

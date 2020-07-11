@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class InteractionUI : MonoBehaviour
 {
-    [SerializeField] private Text actionText;
+    /*[SerializeField] private Text actionText;
 
     public void SetText(string text)
     {
         actionText.text = text;
-    }
+    }*/
 }
