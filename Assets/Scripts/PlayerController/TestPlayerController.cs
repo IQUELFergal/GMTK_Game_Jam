@@ -6,6 +6,7 @@ using UnityEngine;
 public class TestPlayerController : MonoBehaviour
 {
     public ControlRandomizer controlRandomizer;
+    public float movementStep = 1;
     public float speed = 6;
     public float actionTime = 1;
     Rigidbody2D rb;
@@ -20,25 +21,30 @@ public class TestPlayerController : MonoBehaviour
         }
     }
 
+
     void DoSomething(string action)
     {
-        Debug.Log(action);
+        //Debug.Log(action);
         switch (action)
         {
+            case "none":
+                ResetMoveSpeed();
+                break;
             case "moveLeft":
-                MoveLeft();
+                StartCoroutine(Move(-movementStep));
                 break;
 
             case "moveRight":
-                MoveRight();
+                StartCoroutine(Move(-movementStep*Time.deltaTime));
                 break;
 
             case "moveLeft"+Controller.continuousAction:
-                MoveLeftContinuous();
+                MoveContinuous(-movementStep);
                 break;
 
             case "moveRight" + Controller.continuousAction:
-                MoveRightContinuous();
+                //StartCoroutine(Move(movementStep * Time.deltaTime));
+                MoveContinuous(movementStep);
                 break;
 
             case "jump":
@@ -59,27 +65,29 @@ public class TestPlayerController : MonoBehaviour
         }
     }
 
-
-
-    void MoveLeft()
+    private void ResetMoveSpeed()
     {
-        rb.velocity = new Vector2(-speed * Time.deltaTime, rb.velocity.y);
+        rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
-    private void MoveLeftContinuous()
+    IEnumerator Move(float speed)
     {
-        rb.velocity = new Vector2(-speed * Time.deltaTime, rb.velocity.y);
+        if(speed != 0)
+        {
+            Debug.Log("Moving " + (speed > 0 ? "right" : "left"));
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+            yield return new WaitForSeconds(actionTime);
+            ResetMoveSpeed();
+        }
     }
 
-
-
-    void MoveRight()
+    private void MoveContinuous(float speed)
     {
-        rb.velocity = new Vector2(speed, rb.velocity.y);
-    }
-
-    private void MoveRightContinuous()
-    {
-        rb.velocity = new Vector2(speed, rb.velocity.y);
+        if (speed != 0)
+        {
+            Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
+            //rb.velocity = new Vector2(speed, rb.velocity.y);
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
     }
 }

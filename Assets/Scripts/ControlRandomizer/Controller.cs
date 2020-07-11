@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 using UnityEngine.Events;
+using System.Collections;
 
 [System.Serializable]
 public class StringEvent : UnityEvent<string>
@@ -13,14 +14,23 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
 {
     public enum Control { none, moveLeft, moveRight, jump, crouch, interact , selfDestroy};
     public Control control = Control.none;
+
+
     public Text text;
+    Image image;
+
+
     [HideInInspector] public StringEvent stringEvent;
     bool isLocked = false;
     [HideInInspector] public const string continuousAction = "Continuous";
 
+
+
+
     protected override void Awake()
     {
         base.Awake();
+        image = GetComponent<Image>();
         if (stringEvent == null)
             stringEvent = new StringEvent();
 
@@ -50,6 +60,14 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             isLocked = !isLocked;
         }
+    }
+
+    public IEnumerator FlashColor(Color color)
+    {
+        Color baseColor = image.color;
+        image.color = color;
+        yield return new WaitForSeconds(.5f);
+        image.color = baseColor;
     }
 
     public void OnPointerExit(PointerEventData eventData)
