@@ -9,8 +9,12 @@ public class TestPlayerController : MonoBehaviour
     public float movementStep = 1;
     public float speed = 10;
     public float actionTime = 1;
+
     bool isMoving = false;
     bool isInteracting = false;
+    bool isCrouched = false;
+    bool canCrouch = true;
+
     Rigidbody2D rb;
     ColliderInteractor interactor;
 
@@ -19,10 +23,10 @@ public class TestPlayerController : MonoBehaviour
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
 
-    bool isCrouched = false;
+
 
     float crouchScale = 0.5f;
-    
+
 
 
     // Start is called before the first frame update
@@ -71,7 +75,7 @@ public class TestPlayerController : MonoBehaviour
 
             // Move Right
             case "moveRight":
-                StartCoroutine(Move(-movementStep*Time.deltaTime));
+                StartCoroutine(Move(-movementStep * Time.deltaTime));
                 break;
 
             case "moveRight" + Controller.continuousAction:
@@ -83,7 +87,7 @@ public class TestPlayerController : MonoBehaviour
                 if (isGrounded)
                 {
                     rb.AddForce(Vector2.up * 250);
-                }                    
+                }
                 break;
 
             case "jump" + Controller.continuousAction:
@@ -92,15 +96,15 @@ public class TestPlayerController : MonoBehaviour
 
             // crouch
             case "crouch":
-                Crouch();             
+                Crouch();
                 break;
             case "crouch" + Controller.continuousAction:
                 CrouchContinuous();
                 break;
-                            
+
             // interact
             case "interact":
-                InteractContinuous(); 
+                InteractContinuous();
                 break;
 
             case "interact" + Controller.continuousAction:
@@ -125,7 +129,7 @@ public class TestPlayerController : MonoBehaviour
 
     IEnumerator Move(float speed)
     {
-        if(speed != 0 && !isMoving)
+        if (speed != 0 && !isMoving)
         {
             isMoving = true;
             Debug.Log("Moving " + (speed > 0 ? "right" : "left"));
@@ -167,35 +171,7 @@ public class TestPlayerController : MonoBehaviour
         return false;
     }
 
-    // Crouching 
-    private void Crouch()
-    {
-        if (!isCrouched)
-        {
-            transform.localScale = new Vector2(1, crouchScale);
-            isCrouched = !isCrouched;
-        }
-        else
-        {
-            transform.localScale = new Vector2(1, 1);
-            isCrouched = !isCrouched;
-        }
-    }
 
-    private void CrouchContinuous()
-    {
-        if (!isInteracting)
-        {
-            StartCoroutine(CancelCrouch(5.0f));
-        }
-    }
-
-    IEnumerator CancelCrouch(float duration)
-    {
-        Crouch();
-        yield return new WaitForSeconds(duration);
-        Crouch();
-    }
 
 
     private void InteractContinuous()
@@ -211,13 +187,44 @@ public class TestPlayerController : MonoBehaviour
     IEnumerator CancelInteraction(float duration)
     {
         isInteracting = true;
-        float timer = 0f;
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-
-            yield return null;
-        }
+        yield return new WaitForSeconds(duration);
         isInteracting = false;
+    }
+
+
+    // Crouching 
+    private void Crouch()
+    {
+        if (canCrouch)
+        {
+            if (!isCrouched)
+            {
+                Debug.Log("Crouching");
+                transform.localScale = new Vector2(1, crouchScale);
+                isCrouched = true;
+            }
+            else
+            {
+                Debug.Log("Uncrouching");
+                transform.localScale = new Vector2(1, 1);
+                isCrouched = false;
+            }
+        }
+    }
+
+    private void CrouchContinuous()
+    {
+        if (canCrouch)
+        {
+            Crouch();
+            StartCoroutine(CancelCrouch(5.0f));
+        }
+    }
+
+    IEnumerator CancelCrouch(float duration)
+    {
+        canCrouch = false;
+        yield return new WaitForSeconds(duration);
+        canCrouch = true;
     }
 }
