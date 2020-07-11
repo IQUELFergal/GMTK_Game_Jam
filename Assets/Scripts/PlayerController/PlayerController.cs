@@ -1,120 +1,155 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    public float MvtSpeed;
-    public float jumpForce;
-    private float moveInput;
+    public ControlRandomizer controlRandomizer;
+    public float movementStep = 1;
+    public float speed = 10;
+    public float actionTime = 1;
 
-    [SerializeField]
-    private float sprintSpeed;
+    bool isMoving = false;
+    bool isInteracting = false;
+    bool isCrouched = false;
+    bool canCrouch = true;
+    bool canJump = true;
 
-    private SpriteRenderer sr;
-    // private Animator myAnimator;
+    Rigidbody2D rb;
+    ColliderInteractor interactor;
 
     public bool isGrounded;
     public Transform feetPosition;
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
-    private bool isJumping;
+        
+    float crouchScale = 0.5f;
 
-    private float jumpTimeCounter;
-    public float jumpTime;
 
-    private bool facingRight;
-
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        facingRight = true;
-        sr = GetComponent<SpriteRenderer>();
-        sr.flipX = false;
         rb = GetComponent<Rigidbody2D>();
-        // myAnimator = GetComponent<Animator>();
-    }
-
-    private void FixedUpdate()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-
-        /*if (rb.bodyType != RigidbodyType2D.Static)
+        interactor = GetComponent<ColliderInteractor>();
+        for (int i = 0; i < controlRandomizer.controllers.Length; i++)
         {
-            rb.velocity = new Vector2(horizontal * MvtSpeed, rb.velocity.y);
-        }*/
-
-        isGrounded = IsGrounded();
-
-        HandleMovement(horizontal, MvtSpeed);
-
-        Sprint(horizontal);
-
-        Flip(horizontal);
-
-        HandleLayers();
+            controlRandomizer.controllers[i].stringEvent.AddListener(DoSomething);
+        }
     }
+
 
     void Update()
     {
         // moving 
         isGrounded = Physics2D.OverlapCircle(feetPosition.position, checkRadius, groundLayerMask);
-
-        if (isGrounded == true && Input.GetKeyDown(KeyCode.Space))
-        {
-            isJumping = true;
-            jumpTimeCounter = jumpTime;
-            rb.velocity = Vector2.up * jumpForce;
-            // myAnimator.ResetTrigger("jump");
-        }
-
-        if (Input.GetKey(KeyCode.Space) && isJumping == true)
-        {
-            if (jumpTimeCounter > 0)
-            {
-                rb.velocity = Vector2.up * jumpForce;
-                jumpTimeCounter -= Time.deltaTime;
-            }
-            else isJumping = false;
-        }
-        else isJumping = false;
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isJumping = false;
-        }
-
-        if (isGrounded && isJumping)
-        {
-            isGrounded = false;
-            // myAnimator.SetTrigger("jump");
-        }
     }
 
-    private void HandleMovement(float horizontal, float speed)
+    void DoSomething(string action)
     {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-        // myAnimator.SetFloat("speed", Mathf.Abs(horizontal * speed));
-    }
-
-    private void Sprint(float horizontal)
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
+        // Debug.Log(action);
+        switch (action)
         {
-            HandleMovement(horizontal, sprintSpeed);
+            case "none":
+                break;
+
+            case "none" + Controller.continuousAction:
+                ResetMoveSpeed();
+                break;
+
+            // Move Left
+            case "moveLeft":
+                StartCoroutine(Move(-movementStep));
+                break;
+
+            case "moveLeft" + Controller.continuousAction:
+                MoveContinuous(-movementStep);
+                break;
+
+            // Move Right
+            case "moveRight":
+                StartCoroutine(Move(-movementStep * Time.deltaTime));
+                break;
+
+            case "moveRight" + Controller.continuousAction:
+                MoveContinuous(movementStep);
+                break;
+
+            // Jump
+            case "jump":
+                Jump();
+                break;
+
+            case "jump" + Controller.continuousAction:
+                JumpContinuous();
+                break;
+
+            // crouch
+            case "crouch":
+                Crouch();
+                break;
+            case "crouch" + Controller.continuousAction:
+                CrouchContinuous();
+                break;
+
+            // interact
+            case "interact":
+                InteractContinuous();
+                break;
+
+            case "interact" + Controller.continuousAction:
+                InteractContinuous();
+                break;
+
+            // die
+            case "selfDestroy":
+                FindObjectOfType<GameManager>().ResetPlayer();
+                break;
+            case "selfDestroy" + Controller.continuousAction:
+                FindObjectOfType<GameManager>().ContinuousResetPlayerPosition();
+                break;
+
+            // default case
+            default:
+                Debug.LogError("This action does not exist !");
+                break;
         }
     }
 
-    private void Flip(float horizontal)
+    private void ResetMoveSpeed()
     {
-        if (horizontal > 0 && !facingRight || horizontal < 0 && facingRight)
-        {
-            facingRight = !facingRight;
+        rb.velocity = new Vector2(0, rb.velocity.y);
+    }
 
-            sr.flipX = !sr.flipX;
+
+    // Move =======================================================================================
+    IEnumerator Move(float speed)
+    {
+        if (speed != 0 && !isMoving)
+        {
+            isMoving = true;
+            Debug.Log("Moving " + (speed > 0 ? "right" : "left"));
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+            yield return new WaitForSeconds(actionTime);
+            ResetMoveSpeed();
+            isMoving = false;
         }
     }
 
+    private void MoveContinuous(float speed)
+    {
+        if (speed != 0)
+        {
+            Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
+            // rb.velocity = new Vector2(speed, rb.velocity.y);
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
+    }
+
+
+
+
+    // Jumping ===========================================================================
     private bool IsGrounded()
     {
         if (rb.velocity.y <= 0)
@@ -135,15 +170,89 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    private void HandleLayers()
+    private void Jump()
     {
-        if (!isGrounded)
+        if (canJump)
         {
-            // myAnimator.SetLayerWeight(1, 1);
-        }
-        else
+            if (isGrounded)
+            {
+                rb.AddForce(Vector2.up * 250);
+            }
+        }            
+    }
+
+    private void JumpContinuous()
+    {
+        if (canJump)
         {
-            // myAnimator.SetLayerWeight(1, 0);
+            Jump();
+            StartCoroutine(CancelJump(3.0f));
         }
+    }
+
+    IEnumerator CancelJump(float duration)
+    {
+        canJump = false;
+        yield return new WaitForSeconds(duration);
+        canJump = true;
+    }    
+
+
+
+
+    // Crouch ================================================================
+    private void Crouch()
+    {
+        if (canCrouch)
+        {
+            if (!isCrouched)
+            {
+                Debug.Log("Crouching");
+                transform.localScale = new Vector2(1, crouchScale);
+                isCrouched = true;
+            }
+            else
+            {
+                Debug.Log("Uncrouching");
+                transform.localScale = new Vector2(1, 1);
+                isCrouched = false;
+            }
+        }
+    }
+
+    private void CrouchContinuous()
+    {
+        if (canCrouch)
+        {
+            Crouch();
+            StartCoroutine(CancelCrouch(1.0f));
+        }
+    }
+
+    IEnumerator CancelCrouch(float duration)
+    {
+        canCrouch = false;
+        yield return new WaitForSeconds(duration);
+        canCrouch = true;
+    }
+
+    
+
+    // Interact =============================================================
+    private void InteractContinuous()
+    {
+        if (!isInteracting)
+        {
+            Debug.Log("Interacting");
+            interactor.Interact();
+            StartCoroutine(CancelInteraction(1));
+        }
+    }
+
+    IEnumerator CancelInteraction(float duration)
+    {
+        isInteracting = true;
+        yield return new WaitForSeconds(duration);
+        isInteracting = false;
     }
 }

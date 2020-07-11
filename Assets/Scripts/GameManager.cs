@@ -11,10 +11,12 @@ public class GameManager : MonoBehaviour
 
     bool isPaused = false;
 
-    public EndGameInteractable endgameInteractable;
+    EndGameInteractable endgameInteractable;
 
+    public float respawnLag = 0.5f;
     public GameObject player;
     public GameObject start;
+    public bool allowPressingRToResetPlayer = false;
 
     bool canReset = true;
 
@@ -23,7 +25,7 @@ public class GameManager : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         endgameMenu.SetActive(false);
-        endgameInteractable = GameObject.FindGameObjectWithTag("EndGameActivator").GetComponent<EndGameInteractable>();
+        endgameInteractable = (EndGameInteractable)FindObjectOfType(typeof(EndGameInteractable));
         endgameInteractable.endGameEvent.AddListener(EndGame);
     }
     
@@ -41,6 +43,11 @@ public class GameManager : MonoBehaviour
                 PauseGame();
             }
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetPlayer();
+        }
+
     }
 
     public void FreezeGame()
@@ -85,7 +92,7 @@ public class GameManager : MonoBehaviour
     }
 
     // reset position
-    public void ResetPlayerPosition()
+    public void ResetPlayer()
     {
         if (canReset)
         {
@@ -99,12 +106,12 @@ public class GameManager : MonoBehaviour
     {
         if (canReset)
         {
-            ResetPlayerPosition();
-            StartCoroutine(CancelResetPlayerPositio(3.0f));
+            ResetPlayer();
+            StartCoroutine(CancelResetPlayer(3.0f));
         }
     }
 
-    IEnumerator CancelResetPlayerPositio(float duration)
+    IEnumerator CancelResetPlayer(float duration)
     {
         canReset = false;
         yield return new WaitForSeconds(duration);

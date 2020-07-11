@@ -2,30 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class DialogueManager : MonoBehaviour
+public class DialogManager : MonoBehaviour
 {
-    public static DialogueManager instance;
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI dialogueText;
+    public Text nameText;
+    public Text dialogueText;
     public Queue<string> sentences;
-    public GameObject canvaDialogue;
+    public GameObject dialogGameObject;
     private bool activeDialog = false;
     // Start is called before the first frame update
     void Start()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
         sentences = new Queue<string>();
         activeDialog = true;
     }
 
     public void StartDialogue(Dialogue dialogue)
     {
-        Debug.Log("Debut dialogue avec " + dialogue.name);
+        Debug.Log("Start dialog with " + dialogue.name);
+        dialogGameObject.SetActive(true);
         nameText.text = dialogue.name;
         sentences.Clear();
         foreach (string sentence in dialogue.sentences)
@@ -64,7 +59,7 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
-        Destroy(canvaDialogue);
+        dialogGameObject.SetActive(false);
         Debug.Log("End dialog");
         activeDialog = false;
     }
