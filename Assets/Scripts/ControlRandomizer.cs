@@ -53,7 +53,7 @@ public class ControlRandomizer : MonoBehaviour
 
 
 
-    void RandomizeControllers()
+    public void RandomizeControllers()
     {
         Debug.Log("Randomizing controls");
 
