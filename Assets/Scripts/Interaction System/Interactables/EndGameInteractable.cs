@@ -5,10 +5,10 @@ using UnityEngine.Events;
 
 public class EndGameInteractable : MonoBehaviour,IInteractable
 {
-    public UnityEvent endGameEvent;
+    [HideInInspector] public UnityEvent endGameEvent;
 
     public void Interact()
     {
-        throw new System.NotImplementedException();
+        endGameEvent.Invoke();
     }
 }

@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(false);
         endgameMenu.SetActive(false);
         endgameInteractable = GameObject.FindGameObjectWithTag("EndGameActivator").GetComponent<EndGameInteractable>();
-        endgameInteractable.endGameEvent.AddListener(PauseGame);
+        endgameInteractable.endGameEvent.AddListener(EndGame);
     }
     
 
