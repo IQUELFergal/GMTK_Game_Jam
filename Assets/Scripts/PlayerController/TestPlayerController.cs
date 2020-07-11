@@ -11,6 +11,13 @@ public class TestPlayerController : MonoBehaviour
     public float actionTime = 1;
     Rigidbody2D rb;
 
+    public bool isGrounded;
+    public Transform feetPosition;
+    public float checkRadius;
+    [SerializeField] public LayerMask groundLayerMask;
+    private bool isJumping;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +28,46 @@ public class TestPlayerController : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        isGrounded = IsGrounded();
+    }
+
+    void Update()
+    {
+        // moving 
+        isGrounded = Physics2D.OverlapCircle(feetPosition.position, checkRadius, groundLayerMask);
+
+        /*if (isGrounded == true && Input.GetKeyDown(KeyCode.Space))
+        {
+            isJumping = true;
+            jumpTimeCounter = jumpTime;
+            rb.velocity = Vector2.up * jumpForce;
+            // myAnimator.ResetTrigger("jump");
+        }
+
+        if (Input.GetKey(KeyCode.Space) && isJumping == true)
+        {
+            if (jumpTimeCounter > 0)
+            {
+                rb.velocity = Vector2.up * jumpForce;
+                jumpTimeCounter -= Time.deltaTime;
+            }
+            else isJumping = false;
+        }
+        else isJumping = false;
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isJumping = false;
+        }
+
+        if (isGrounded && isJumping)
+        {
+            isGrounded = false;
+            // myAnimator.SetTrigger("jump");
+        }*/
+    }
 
     void DoSomething(string action)
     {
@@ -60,6 +107,7 @@ public class TestPlayerController : MonoBehaviour
 
 
             case "jump":
+                StartCoroutine(Jump(movementStep));
                 break;
 
             case "crouch":
@@ -93,6 +141,16 @@ public class TestPlayerController : MonoBehaviour
         }
     }
 
+    IEnumerator Jump(float speed)
+    {
+        if (speed != 0)
+        {
+            Debug.Log("Jumping");
+            rb.AddForce(Vector2.up * speed);
+            yield return new WaitForSeconds(actionTime);
+        }
+    }
+
     private void MoveContinuous(float speed)
     {
         if (speed != 0)
@@ -101,5 +159,26 @@ public class TestPlayerController : MonoBehaviour
             //rb.velocity = new Vector2(speed, rb.velocity.y);
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
+    }
+
+    // Jumping
+    private bool IsGrounded()
+    {
+        if (rb.velocity.y <= 0)
+        {
+            // myAnimator.SetBool("land", true);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(feetPosition.position, checkRadius);
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].gameObject != gameObject)
+                {
+                    /*myAnimator.ResetTrigger("jump");
+                    myAnimator.SetBool("land", false);*/
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
