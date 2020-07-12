@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9056604, g: 0.2025421, b: 0.13243146, a: 1}
+  m_Color: {r: 0.9058824, g: 0.31764707, b: 0.13333334, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -209,7 +209,6 @@ GameObject:
   m_Component:
   - component: {fileID: 132548711}
   - component: {fileID: 132548710}
-  - component: {fileID: 132548709}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -217,18 +216,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &132548709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 132548708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e621c2d0dc80bb04eadd4ce8792cbb01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &132548710
 MonoBehaviour:
   m_ObjectHideFlags: 0

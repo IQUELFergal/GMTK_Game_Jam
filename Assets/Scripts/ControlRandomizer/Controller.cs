@@ -13,7 +13,7 @@ public class StringEvent : UnityEvent<string>
 public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public enum Control { none, moveLeft, moveRight, jump, crouch, interact , selfDestroy};
-    public Control control = Control.none;
+    public Control control;
 
 
     Text text;
@@ -40,7 +40,8 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (stringEvent == null)
             stringEvent = new StringEvent();
 
-        Setup(0);
+        //Setup(0);
+        UpdateText();
     }
 
     private void Update()
@@ -117,5 +118,10 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
             text.text = i.ToString() + " " + control.ToString();
         }
         else Debug.LogError("Can't setup the controller with this value : out of bounds");
+    }
+
+    public void UpdateText()
+    {
+        text.text = ((int)control).ToString() + " " + control.ToString();
     }
 }

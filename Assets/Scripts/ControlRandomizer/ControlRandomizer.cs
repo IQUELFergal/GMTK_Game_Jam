@@ -18,8 +18,9 @@ public class ControlRandomizer : MonoBehaviour
             Debug.Log("Not enough controllers for the current enum of controls");
             return;
         }
-        
-        RandomizeControllers();
+
+        //RandomizeControllers();
+        //SetupControllers();
     }
 
     public void RandomizeControllers()
@@ -47,6 +48,14 @@ public class ControlRandomizer : MonoBehaviour
         for (int i = 0; i < controllerList.Count; i++)
         {
             controllerList[i].Setup(0);
+        }
+    }
+
+    public void SetupControllers()
+    {
+        for (int i = 0; i < controllers.Length; i++)
+        {
+            controllers[i].Setup(0);
         }
     }
     

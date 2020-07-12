@@ -6,9 +6,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public ControlRandomizer controlRandomizer;
-    public float movementStep = 1;
-    public float speed = 10;
-    public float actionTime = 1;
+    public float moveSpeed = 1;
+    //public float speed = 10;
+    //public float moveDuration= 1;
+
+    [Header("Jump settings")]
+    public float jumpDelay = 0;
+    public float jumpForce = 250;
+
+    [Header("Crouch settings")]
+    public float crouchDelay = 1;
+
+    [Header("Interaction settings")]
+    public float interactionDelay = 1;
+    public float lightFlashDuration = 0.25f;
 
     Animator animator;
 
@@ -28,8 +39,7 @@ public class PlayerController : MonoBehaviour
     public Transform feetPosition;
     public float checkRadius;
     [SerializeField] public LayerMask groundLayerMask;
-        
-    float crouchScale = 0.5f;
+
 
 
     // Start is called before the first frame update
@@ -64,25 +74,24 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case "none" + Controller.continuousAction:
-                ResetMoveSpeed();
                 break;
 
             // Move Left
             case "moveLeft":
-                StartCoroutine(Move(-movementStep));
+                Move(-moveSpeed);
                 break;
 
             case "moveLeft" + Controller.continuousAction:
-                MoveContinuous(-movementStep);
+                MoveContinuous(-moveSpeed);
                 break;
 
             // Move Right
             case "moveRight":
-                StartCoroutine(Move(-movementStep * Time.deltaTime));
+                Move(moveSpeed);
                 break;
 
             case "moveRight" + Controller.continuousAction:
-                MoveContinuous(movementStep);
+                MoveContinuous(moveSpeed);
                 break;
 
             // Jump
@@ -126,24 +135,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ResetMoveSpeed()
-    {
-        rb.velocity = new Vector2(0, rb.velocity.y);
-    }
 
 
     // Move =======================================================================================
-    IEnumerator Move(float speed)
+    private void Move(float speed)
     {
-        if (speed != 0 && !isMoving)
-        {
-            isMoving = true;
-            Debug.Log("Moving " + (speed > 0 ? "right" : "left"));
-            rb.velocity = new Vector2(speed, rb.velocity.y);
-            yield return new WaitForSeconds(actionTime);
-            ResetMoveSpeed();
-            isMoving = false;
-        }
+        transform.Translate(Vector3.right * speed / 2);
     }
 
     private void MoveContinuous(float speed)
@@ -151,42 +148,20 @@ public class PlayerController : MonoBehaviour
         if (speed != 0)
         {
             Debug.Log("Moving " + (speed > 0 ? "right" : "left") + " continuously");
-            // rb.velocity = new Vector2(speed, rb.velocity.y);
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
     }
 
 
 
-
     // Jumping ===========================================================================
-    private bool IsGrounded()
-    {
-        if (rb.velocity.y <= 0)
-        {
-            // myAnimator.SetBool("land", true);
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(feetPosition.position, checkRadius);
-
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].gameObject != gameObject)
-                {
-                    /*myAnimator.ResetTrigger("jump");
-                    myAnimator.SetBool("land", false);*/
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private void Jump()
     {
         if (canJump)
         {
             if (isGrounded)
             {
-                rb.AddForce(Vector2.up * 500);
+                rb.AddForce(Vector2.up * jumpForce);
             }
         }            
     }
@@ -196,7 +171,7 @@ public class PlayerController : MonoBehaviour
         if (canJump)
         {
             Jump();
-            StartCoroutine(CancelJump(3.0f));
+            StartCoroutine(CancelJump(jumpDelay));
         }
     }
 
@@ -235,7 +210,7 @@ public class PlayerController : MonoBehaviour
         if (canCrouch)
         {
             Crouch();
-            StartCoroutine(CancelCrouch(1.0f));
+            StartCoroutine(CancelCrouch(crouchDelay));
         }
     }
 
@@ -256,7 +231,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Interacting");
             interactor.Interact();
             StartCoroutine(FlashLight(0.25f));
-            StartCoroutine(CancelInteraction(1));
+            StartCoroutine(CancelInteraction(interactionDelay));
         }
     }
 
