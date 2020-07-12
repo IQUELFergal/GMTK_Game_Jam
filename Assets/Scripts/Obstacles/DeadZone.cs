@@ -5,18 +5,18 @@ using UnityEngine.XR.WSA.Input;
 
 public class DeadZone : MonoBehaviour
 {
-    GameManager gm;
+    PlayerRespawner respawner;
 
     void Start()
     {
-        gm = (GameManager)FindObjectOfType(typeof(GameManager));
+        respawner = (PlayerRespawner)FindObjectOfType(typeof(PlayerRespawner));
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
         if ( !col.isTrigger && col.GetComponent<PlayerController>() != null)
         {
-            gm.ResetPlayer();
+            respawner.ResetPlayer();
         }
     }
 }

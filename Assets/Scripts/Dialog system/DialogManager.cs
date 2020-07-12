@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class DialogManager : MonoBehaviour
 {
     public Text nameText;
-    public Text dialogueText;
+    public Text dialogText;
     public Queue<string> sentences;
     public GameObject dialogGameObject;
     private bool activeDialog = false;
@@ -48,10 +48,10 @@ public class DialogManager : MonoBehaviour
 
     IEnumerator TypeSentence(string sentence)
     {
-        dialogueText.text = "";
+        dialogText.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
-            dialogueText.text += letter;
+            dialogText.text += letter;
             //FindObjectOfType<AudioManager>().Play("Dialogue");
             yield return new WaitForSeconds(0.05f);
         }

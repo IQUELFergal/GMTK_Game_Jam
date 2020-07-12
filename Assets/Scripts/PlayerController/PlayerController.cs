@@ -103,10 +103,10 @@ public class PlayerController : MonoBehaviour
 
             // die
             case "selfDestroy":
-                FindObjectOfType<GameManager>().ResetPlayer();
+                FindObjectOfType<PlayerRespawner>().ResetPlayer();
                 break;
             case "selfDestroy" + Controller.continuousAction:
-                FindObjectOfType<GameManager>().ContinuousResetPlayerPosition();
+                FindObjectOfType<PlayerRespawner>().ContinuousResetPlayerPosition();
                 break;
 
             // default case

@@ -13,12 +13,10 @@ public class GameManager : MonoBehaviour
 
     EndGameInteractable endgameInteractable;
 
-    public float respawnLag = 0.5f;
-    public GameObject player;
-    public GameObject start;
+    
     public bool allowPressingRToResetPlayer = false;
 
-    bool canReset = true;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -43,11 +41,7 @@ public class GameManager : MonoBehaviour
                 PauseGame();
             }
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetPlayer();
-        }
-
+        
     }
 
     public void FreezeGame()
@@ -91,30 +85,4 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    // reset position
-    public void ResetPlayer()
-    {
-        if (canReset)
-        {
-            player.SetActive(false);
-            player.transform.position = start.transform.position;
-            player.SetActive(true);
-        }            
-    }
-
-    public void ContinuousResetPlayerPosition()
-    {
-        if (canReset)
-        {
-            ResetPlayer();
-            StartCoroutine(CancelResetPlayer(3.0f));
-        }
-    }
-
-    IEnumerator CancelResetPlayer(float duration)
-    {
-        canReset = false;
-        yield return new WaitForSeconds(duration);
-        canReset = true;
-    }
 }
