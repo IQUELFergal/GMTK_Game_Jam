@@ -49,5 +49,13 @@ public class ControlRandomizer : MonoBehaviour
             controllerList[i].Setup(0);
         }
     }
-
+    
+    [ContextMenu("Setup sprite")]
+    void SetupSprites()
+    {
+        for (int i = 0; i < controllers.Length; i++)
+        {
+            controllers[i].SetupSprite();
+        }   
+    }
 }

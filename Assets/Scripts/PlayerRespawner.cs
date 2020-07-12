@@ -27,7 +27,7 @@ public class PlayerRespawner : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            StartCoroutine(RespawnPlayer());
+            
         }
     }
 
@@ -36,11 +36,7 @@ public class PlayerRespawner : MonoBehaviour
     {
         if (canReset)
         {
-            fakePlayer.transform.position = player.transform.position;
-            fakePlayer.SetActive(true);
-            player.SetActive(false);
-            player.transform.position = start.transform.position;
-            player.SetActive(true);
+            StartCoroutine(RespawnPlayer());
         }
     }
 
@@ -63,19 +59,13 @@ public class PlayerRespawner : MonoBehaviour
 
     IEnumerator RespawnPlayer()
     {
-        if (canReset)
+        StartCoroutine(Dissolve());
+        while (!readyToRespawn)
         {
-            //fakePlayer.transform.position = player.transform.position;
-            //fakePlayer.SetActive(true);
-
-            StartCoroutine(Dissolve());
-            while (!readyToRespawn)
-            {
-                yield return null;
-            }
-            player.transform.position = start.transform.position;
-            StartCoroutine(Spawn());
+            yield return null;
         }
+        player.transform.position = start.transform.position;
+        StartCoroutine(Spawn());
     }
 
 

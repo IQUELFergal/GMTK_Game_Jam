@@ -5,6 +5,7 @@ using UnityEngine;
 public class HackManager : MonoBehaviour
 {
     ControlRandomizer randomizer;
+    Screen screen;
 
     public float timeUntilEachHack = 30;
     bool canHack = true;
@@ -12,10 +13,15 @@ public class HackManager : MonoBehaviour
     void Start()
     {
         randomizer = (ControlRandomizer)FindObjectOfType(typeof(ControlRandomizer));
+        screen = (Screen)FindObjectOfType(typeof(Screen));
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Hack();
+        }
         if (canHack)
         {
             Hack();
@@ -26,6 +32,7 @@ public class HackManager : MonoBehaviour
     void Hack()
     {
         randomizer.RandomizeControllers();
+        screen.Hack(3);
     }
 
     IEnumerator WaitUntilNextHack()

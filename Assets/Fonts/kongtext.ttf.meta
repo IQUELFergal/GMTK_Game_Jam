@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e18d6cf9255c1064ebfe280aafc9064e
+guid: 6d2b5bcd366cf8d43b3b7d3f47ef0041
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: 8-bit Arcade Out
+  fontName: Kongtext
   fontNames:
-  - 8-bit Arcade Out
+  - Kongtext
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

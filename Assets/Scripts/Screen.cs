@@ -16,7 +16,8 @@ public class Screen : MonoBehaviour
     public Material material;
 
     public RawImage rawImage;
-    public Image image;
+    public Image adviceImage;
+    public Image hackImage;
 
     public RenderTexture securityCamTexture;
     public Sprite hackSprite;
@@ -32,6 +33,14 @@ public class Screen : MonoBehaviour
         colors[2] = hackColor;
 
         UpdateColor();
+        UpdateSupport();
+    }
+
+    public void SetScreenState(ScreenState state)
+    {
+        screenState = state;
+        UpdateColor();
+        UpdateSupport();
     }
 
     public void SetScreenState(int i)
@@ -39,8 +48,8 @@ public class Screen : MonoBehaviour
         if (i >= 0 && i < Enum.GetNames(typeof(ScreenState)).Length)
         {
             screenState = (ScreenState)i;
-            UpdateColor();
             UpdateSupport();
+            UpdateColor();
         }
     }
 
@@ -48,19 +57,40 @@ public class Screen : MonoBehaviour
     void UpdateColor()
     {
         currentColor = colors[(int)screenState];
+        material.SetColor("_Color", currentColor);
     }
 
     void UpdateSupport()
     {
         if (screenState == ScreenState.secutityCam)
         {
+            hackImage.gameObject.SetActive(false);
+            adviceImage.gameObject.SetActive(false);
             rawImage.gameObject.SetActive(true);
-            image.gameObject.SetActive(false);
+        }
+        else if (screenState == ScreenState.hack)
+        {
+            hackImage.gameObject.SetActive(true);
+            adviceImage.gameObject.SetActive(false);
+            rawImage.gameObject.SetActive(false);
         }
         else
         {
-            image.gameObject.SetActive(true);
+            hackImage.gameObject.SetActive(false);
+            adviceImage.gameObject.SetActive(true);
             rawImage.gameObject.SetActive(false);
         }
+    }
+    public void Hack(float duration)
+    {
+        StartCoroutine(HackScreen(duration));
+    }
+    IEnumerator HackScreen(float duration)
+    {
+
+        ScreenState state = screenState;
+        SetScreenState(ScreenState.hack);
+        yield return new WaitForSeconds(duration);
+        SetScreenState(state);
     }
 }

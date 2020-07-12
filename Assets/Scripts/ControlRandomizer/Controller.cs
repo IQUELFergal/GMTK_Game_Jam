@@ -18,6 +18,9 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     Text text;
     Image image;
+    public Sprite buttonUpSprite;
+    public Sprite buttonDownSprite;
+
     public float flashDuration = 0.5f;
     public Color baseColor = Color.white;
     public Color activatedColor = Color.yellow;
@@ -33,6 +36,7 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         base.Awake();
         image = GetComponent<Image>();
         text = transform.GetChild(0).GetComponent<Text>();
+        image.sprite = buttonUpSprite;
         if (stringEvent == null)
             stringEvent = new StringEvent();
 
@@ -53,7 +57,7 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             stringEvent.Invoke(control.ToString());
-            StartCoroutine(FlashColor());
+            StartCoroutine(PushButton());
             if (isLocked)
             {
                 isLocked = false;
@@ -62,8 +66,8 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         else if (eventData.button == PointerEventData.InputButton.Left)
         {
             isLocked = !isLocked;
-            if (isLocked) image.color = activatedColor;
-            else image.color = baseColor;
+            if (isLocked) image.sprite = buttonDownSprite;
+            else image.sprite = buttonUpSprite;
         }
     }
 
@@ -74,6 +78,13 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         image.color = baseColor;
     }
 
+    public IEnumerator PushButton()
+    {
+        image.sprite = buttonDownSprite;
+        yield return new WaitForSeconds(flashDuration);
+        image.sprite = buttonUpSprite;
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         //Debug.Log("Exiting " + this.ToString());
@@ -82,6 +93,11 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerEnter(PointerEventData eventData)
     {
         //Debug.Log("Entering " + this.ToString());
+    }
+
+    public void SetupSprite()
+    {
+        image.sprite = buttonUpSprite;
     }
 
     public void Setup(int i)
