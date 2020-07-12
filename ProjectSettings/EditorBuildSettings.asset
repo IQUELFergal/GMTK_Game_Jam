@@ -5,13 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 3c75b1e05a03f014191d3280ce212366
   - enabled: 1
-    path: Assets/Scenes/Control Randomizer 1.unity
-    guid: 86fc8a7a6182080458c4d0200f1e1428
+    path: Assets/Scenes/GameLevel.unity
+    guid: 1628e4293cb6e4041a126cbc65915c8c
   m_configObjects: {}

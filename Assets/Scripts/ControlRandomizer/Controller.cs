@@ -58,6 +58,7 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         {
             stringEvent.Invoke(control.ToString());
             StartCoroutine(PushButton());
+            SoundPlayer.PlaySound(SoundManager.Sound.ButtonClick);
             if (isLocked)
             {
                 isLocked = false;
@@ -66,8 +67,16 @@ public class Controller : UIBehaviour, IPointerClickHandler, IPointerEnterHandle
         else if (eventData.button == PointerEventData.InputButton.Left)
         {
             isLocked = !isLocked;
-            if (isLocked) image.sprite = buttonDownSprite;
-            else image.sprite = buttonUpSprite;
+            if (isLocked)
+            {
+                SoundPlayer.PlaySound(SoundManager.Sound.ButtonLock);
+                image.sprite = buttonDownSprite;
+            }
+            else
+            {
+                SoundPlayer.PlaySound(SoundManager.Sound.ButtonUnlock);
+                image.sprite = buttonUpSprite;
+            }
         }
     }
 

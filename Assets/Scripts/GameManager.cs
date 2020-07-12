@@ -74,9 +74,9 @@ public class GameManager : MonoBehaviour
         UnfreezeGame();
     }
 
-    public void GoToMainMenu(SceneAsset scene)
+    public void GoToMainMenu(int buildIndex)
     {
-        SceneManager.LoadScene(scene.name);
+        SceneManager.LoadScene(buildIndex);
     }
 
     public void Quit()

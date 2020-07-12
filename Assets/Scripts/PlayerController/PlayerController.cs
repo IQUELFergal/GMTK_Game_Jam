@@ -10,6 +10,11 @@ public class PlayerController : MonoBehaviour
     public float speed = 10;
     public float actionTime = 1;
 
+    Animator animator;
+
+    public SpriteRenderer lightSr;
+    public Color lightActivationColor;
+    public Color baseLightColor;
     bool isMoving = false;
     bool isInteracting = false;
     bool isCrouched = false;
@@ -32,6 +37,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         interactor = GetComponent<ColliderInteractor>();
+        animator = GetComponent<Animator>();
+        lightSr.color = baseLightColor;
         for (int i = 0; i < controlRandomizer.controllers.Length; i++)
         {
             controlRandomizer.controllers[i].stringEvent.AddListener(DoSomething);
@@ -43,6 +50,9 @@ public class PlayerController : MonoBehaviour
     {
         // moving 
         isGrounded = Physics2D.OverlapCircle(feetPosition.position, checkRadius, groundLayerMask);
+
+        animator.SetBool("isCrouched", isCrouched);
+        animator.SetBool("isMoving", isMoving);
     }
 
     void DoSomething(string action)
@@ -176,7 +186,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isGrounded)
             {
-                rb.AddForce(Vector2.up * 250);
+                rb.AddForce(Vector2.up * 500);
             }
         }            
     }
@@ -208,13 +218,13 @@ public class PlayerController : MonoBehaviour
             if (!isCrouched)
             {
                 Debug.Log("Crouching");
-                transform.localScale = new Vector2(1, crouchScale);
+                GetComponent<BoxCollider2D>().size = new Vector2(0.65f, 1);
                 isCrouched = true;
             }
             else
             {
                 Debug.Log("Uncrouching");
-                transform.localScale = new Vector2(1, 1);
+                GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
                 isCrouched = false;
             }
         }
@@ -245,6 +255,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Interacting");
             interactor.Interact();
+            StartCoroutine(FlashLight(0.25f));
             StartCoroutine(CancelInteraction(1));
         }
     }
@@ -254,5 +265,12 @@ public class PlayerController : MonoBehaviour
         isInteracting = true;
         yield return new WaitForSeconds(duration);
         isInteracting = false;
+    }
+
+    IEnumerator FlashLight(float duration)
+    {
+        lightSr.color = lightActivationColor;
+        yield return new WaitForSeconds(duration);
+        lightSr.color = baseLightColor;
     }
 }

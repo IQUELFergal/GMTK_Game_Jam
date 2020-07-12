@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerRespawner : MonoBehaviour
 {
     public Material material;
-    public GameObject fakePlayer;
     public float respawnLag = 0.5f;
     public GameObject player;
     public GameObject start;
@@ -17,7 +16,6 @@ public class PlayerRespawner : MonoBehaviour
     bool readyToRespawn = false;
     void Start()
     {
-        fakePlayer.SetActive(false);
         dissolveAmount = 0;
         material.SetFloat("_DissolveAmount", dissolveAmount);
     }
